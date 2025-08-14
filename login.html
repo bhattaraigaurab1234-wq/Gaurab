@@ -123,6 +123,13 @@
         return;
       }
 
+      // Password length check
+      if (password.length < 8 || password.length > 20) {
+        showNotification("❌ Password must be 8–20 characters long", "error");
+        return;
+      }
+
+      // Password complexity check
       const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&]).+$/;
       if (!passwordPattern.test(password)) {
         showNotification("❌ Password must include letters, numbers, and symbols", "error");
