@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PET PUJA — Hotel & Café</title>
+  <meta name="description" content="PET PUJA — Order delicious Nepali dishes. 20-item menu, cart, receipt, login, and contact with email validation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1411;             
+      --panel:#0f1a16;          
+      --card:#12221c;           
+      --text:#f3f7f5;
+      --muted:#8ea39a;
+      --brand:#00c896;          
+      --brand-2:#ffd166;        
+      --accent:#19e3b1;
+      --radius:16px;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text); background:var(--bg); font-family:Manrope, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background-image: radial-gradient(900px 500px at 10% 0%, rgba(0,200,150,.10), transparent 60%),
+                        radial-gradient(700px 500px at 90% 20%, rgba(255,209,102,.08), transparent 60%),
+                        linear-gradient(180deg, #08110e, #0b1411);
+      overflow-x:hidden;
+    }
+    body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:soft-light;background-image:url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><filter id=\"n\"><feTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"3\" stitchTiles=\"stitch\"/></filter><rect width=\"100\" height=\"100\" filter=\"url(%23n)\" opacity=\"0.4\"/></svg>');}
+
+    /* Header / Navbar */
+    header.nav{position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(10px);
+      background:linear-gradient(to bottom, rgba(15,26,22,.92), rgba(15,26,22,.65)); border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav-inner{max-width:1200px; margin:0 auto; padding:12px 18px; display:flex; gap:14px; align-items:center}
+    .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text)}
+    .logo{width:40px; height:40px; border-radius:12px; display:grid; place-items:center; background:
+      conic-gradient(from 220deg, var(--brand), var(--brand-2)); box-shadow:0 8px 18px rgba(0,200,150,.25);}    
+    .brand-name{font-weight:800; letter-spacing:.4px}
+    .navlinks{margin-left:auto; display:flex; gap:10px; flex-wrap:wrap}
+    .navlinks a{color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:999px; border:1px solid transparent; transition:.2s}
+    .navlinks a:hover, .navlinks a.active{color:var(--text); border-color:rgba(255,255,255,.08); background:rgba(255,255,255,.04)}
+    .btn{appearance:none; border:1px solid rgba(255,255,255,.12); background:linear-gradient(180deg, rgba(0,200,150,.18), rgba(0,200,150,.10)); color:var(--text); padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer; transition:.25s}
+    .btn:hover{transform:translateY(-1px); box-shadow:0 8px 18px rgba(0,200,150,.15)}
+    .btn.ghost{background:transparent}
+
+    /* Hero */
+    .hero{max-width:1200px; margin:30px auto 10px; padding:0 18px; display:grid; grid-template-columns:1.2fr .8fr; gap:26px; align-items:stretch}
+    .hero-card,.hours{background:linear-gradient(180deg, rgba(18,34,28,.8), rgba(18,34,28,.6)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.1); color:var(--text); font-weight:700; font-size:14px; background:rgba(255,255,255,.04)}
+    .hero h1{font-size:clamp(28px,5vw,46px); margin:10px 0}
+    .muted{color:var(--muted)}
+
+    /* Sections */
+    .section{max-width:1200px; margin:32px auto; padding:0 18px}
+    .section h2{margin:0 0 10px; font-size:28px}
+
+    /* Menu grid + scroll */
+    .menu-wrap{background:linear-gradient(180deg, rgba(18,34,28,.7), rgba(18,34,28,.5)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow)}
+    .grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; max-height:560px; overflow:auto; padding-right:6px}
+    @media (max-width:900px){ .hero{grid-template-columns:1fr} .grid{grid-template-columns:repeat(2, 1fr)} }
+    @media (max-width:600px){ .grid{grid-template-columns:1fr} }
+
+    .card{background:linear-gradient(180deg, rgba(18,34,28,.85), rgba(18,34,28,.65)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:12px; box-shadow:var(--shadow); position:relative; overflow:hidden; transition:transform .15s ease; cursor:pointer}
+    .card:hover{transform:translateY(-2px)}
+    .photo{display:none}
+    .card-img-container {
+      height: 140px;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 10px, rgba(255,255,255,.02) 10px 20px);
+      border: 1px dashed rgba(255,255,255,.12);
+    }
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .meta{display:flex; justify-content:space-between; align-items:center; margin-top:10px; color:var(--muted); font-size:14px}
+    .title{margin:6px 0 6px; font-weight:800}
+    .price{font-weight:800; color:var(--brand-2)}
+    .add-row{display:flex; gap:8px; align-items:center}
+    .add-row .qty{min-width:60px; text-align:center; color:var(--muted)}
+    .card .add-btn{margin-left:auto}
+
+    /* Cart */
+    .cart{position:fixed; right:18px; bottom:18px; width:min(380px, 92vw); background:linear-gradient(180deg, rgba(18,34,28,.95), rgba(18,34,28,.85)); border:1px solid rgba(255,255,255,.1); border-radius:18px; box-shadow:var(--shadow); padding:14px; z-index:60}
+    .cart-header{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+    .cart-header h3{margin:0; font-size:18px}
+    .cart-items{max-height:240px; overflow:auto; margin:8px 0; padding-right:4px}
+    .cart-row{display:grid; grid-template-columns:1fr auto auto auto; gap:8px; align-items:center; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,.08)}
+    .cart-row:last-child{border-bottom:0}
+    .cart-name{color:var(--text)}
+    .cart-qty{display:flex; gap:6px; align-items:center}
+
+    /* Login modal */
+    .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.55); z-index:80}
+    .modal.open{display:grid}
+    .dialog{background:linear-gradient(180deg, rgba(18,34,28,.98), rgba(18,34,28,.9)); border:1px solid rgba(255,255,255,.12); border-radius:16px; box-shadow:var(--shadow); padding:18px; width:min(420px, 92vw)}
+    .dialog h3{margin:0 0 8px}
+    .field{display:grid; gap:6px; margin:10px 0}
+    .field input{background:#0e1b16; border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:10px; color:var(--text)}
+    .hint{font-size:12px; color:var(--muted)}
+    .error{font-size:13px; color:#ff7676; min-height:18px}
+
+    /* Contact */
+    form#contactForm{display:grid; gap:10px; background:linear-gradient(180deg, rgba(18,34,28,.85), rgba(18,34,28,.65)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:16px}
+    form#contactForm input, form#contactForm textarea{background:#0e1b16; border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:10px; color:var(--text)}
+    .ok{color:#7bf3b1; font-size:14px}
+  </style>
+</head>
+<body>
+  <header class="nav" id="top">
+    <div class="nav-inner">
+      <a class="brand" href="#home" aria-label="PET PUJA Home">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-name">PET PUJA</div>
+      </a>
+      <nav class="navlinks" id="navlinks">
+        <a href="#home" class="active">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">Contact Us</a>
+        <button id="loginBtn" class="btn">Login</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-card">
+      <span class="badge">🍽️ Comfort food • Café vibes</span>
+      <h1>Hotel PET PUJA</h1>
+      <p class="muted">Click any item (or the Add button) to add it to your order. Quantities increase automatically.</p>
+      <div style="display:flex; gap:10px; margin-top:12px">
+        <a class="btn" href="#menu">Browse Menu</a>
+        <a class="btn ghost" href="#contact">Contact</a>
+      </div>
+    </div>
+    <aside class="hours">
+      <h3>Hours</h3>
+      <ul style="list-style:none; padding:0; margin:0; color:var(--muted)">
+        <li style="display:flex; justify-content:space-between; padding:6px 0"><span>Sun–Thu</span><span>8:00–21:00</span></li>
+        <li style="display:flex; justify-content:space-between; padding:6px 0"><span>Fri–Sat</span><span>8:00–22:30</span></li>
+        <li style="display:flex; justify-content:space-between; padding:6px 0"><span>Location</span><span>City Center, Nepal</span></li>
+      </ul>
+    </aside>
+  </section>
+
+  <div class="section" id="menu">
+    <h2>Our Menu</h2>
+    <p class="muted">20 items • Nepali prices (NPR). Scroll inside the menu. Click a card to add to cart.</p>
+
+    <div class="menu-wrap">
+      <div class="grid" id="grid">
+        <!-- EXACTLY 20 CARDS -->
+        <!-- MOMO (4) -->
+        <article class="card" data-name="Veg Momo" data-price="180">
+          <div class="card-img-container">
+            <img src="momos.jpg" alt="Veg Momo" class="card-img" width="500" height="350">
+          </div>
+          <div class="meta"><span>Momo</span><span class="price">NPR 180</span></div>
+          <div class="title">Veg Momo</div>
+          <div class="add-row"><div class="qty" id="qty-VegMomo">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Chicken Momo" data-price="220">
+          <div class="card-img-container">
+            <img src="momos.jpg" alt="Chicken Momo" class="card-img" width="500" height="350" >
+          </div>
+          <div class="meta"><span>Momo</span><span class="price">NPR 220</span></div>
+          <div class="title">Chicken Momo</div>
+          <div class="add-row"><div class="qty" id="qty-ChickenMomo">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Buff Momo" data-price="220">
+          <div class="card-img-container">
+            <img src="momos.jpg" alt="Buff Momo" class="card-img" width="500" height="350" >
+          </div>
+          <div class="meta"><span>Momo</span><span class="price">NPR 220</span></div>
+          <div class="title">Buff Momo</div>
+          <div class="add-row"><div class="qty" id="qty-BuffMomo">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Jhol Momo" data-price="240">
+          <div class="card-img-container">
+            <img src="MOMO.webp" alt="Jhol Momo" class="card-img" width="500" height="350" >
+          </div>
+          <div class="meta"><span>Momo</span><span class="price">NPR 240</span></div>
+          <div class="title">Jhol Momo</div>
+          <div class="add-row"><div class="qty" id="qty-JholMomo">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+
+        <!-- SNACKS (4) -->
+        <article class="card" data-name="Veg Pakora" data-price="180">
+          <div class="card-img-container">
+            <img src="pakora.jpg" alt="Veg Pakora" class="card-img"  width="500" height="350" >
+          </div>
+          <div class="meta"><span>Snacks</span><span class="price">NPR 180</span></div>
+          <div class="title">Veg Pakora</div>
+          <div class="add-row"><div class="qty" id="qty-VegPakora">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Samosa" data-price="100">
+          <div class="card-img-container">
+            <img src="Samosa.jpg" alt="Samosa" class="card-img" width="500" height="350">
+          </div>
+          <div class="meta"><span>Snacks</span><span class="price">NPR 100</span></div>
+          <div class="title">Samosa</div>
+          <div class="add-row"><div class="qty" id="qty-Samosa">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Spring Roll" data-price="160">
+          <div class="card-img-container">
+            <img src="spring-rolls.jpg" alt="Spring Roll" class="card-img" width="500" height="350" >
+          </div>
+          <div class="meta"><span>Snacks</span><span class="price">NPR 160</span></div>
+          <div class="title">Spring Roll</div>
+          <div class="add-row"><div class="qty" id="qty-SpringRoll">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="French Fries" data-price="140">
+          <div class="card-img-container">
+            <img src="French-Fries.jpg" alt="French Fries" class="card-img" width="500" height="350">
+          </div>
+          <div class="meta"><span>Snacks</span><span class="price">NPR 140</span></div>
+          <div class="title">French Fries</div>
+          <div class="add-row"><div class="qty" id="qty-FrenchFries">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+
+        <!-- COFFEE (4) -->
+        <article class="card" data-name="Espresso" data-price="180">
+          <div class="card-img-container">
+            <img src="ESSPRESSO.jpeg" alt="Espresso" class="card-img" width="500" height="350">
+          </div>
+          <div class="meta"><span>Coffee</span><span class="price">NPR 180</span></div>
+          <div class="title">Espresso</div>
+          <div class="add-row"><div class="qty" id="qty-Espresso">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Cappuccino" data-price="220">
+          <div class="card-img-container">
+            <img src="Cappuccino.jpg" alt="Cappuccino" class="card-img"  width="500" height="350">
+          </div>
+          <div class="meta"><span>Coffee</span><span class="price">NPR 220</span></div>
+          <div class="title">Cappuccino</div>
+          <div class="add-row"><div class="qty" id="qty-Cappuccino">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Latte" data-price="220">
+          <div class="card-img-container">
+            <img src="LATTE.webp" alt="Latte" class="card-img"  width="500" height="350">
+          </div>
+          <div class="meta"><span>Coffee</span><span class="price">NPR 220</span></div>
+          <div class="title">Latte</div>
+          <div class="add-row"><div class="qty" id="qty-Latte">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Cold Brew" data-price="240">
+          <div class="card-img-container">
+            <img src="COLD BREW.jpg" alt="Cold Brew" class="card-img" width="500" height="350" >
+          </div>
+          <div class="meta"><span>Coffee</span><span class="price">NPR 240</span></div>
+          <div class="title">Cold Brew</div>
+          <div class="add-row"><div class="qty" id="qty-ColdBrew">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+
+        <!-- REFRESHERS (4) -->
+        <article class="card" data-name="Lemon Soda" data-price="110">
+          <div class="card-img-container">
+            <img src="LEMON SODA.jpg" alt="Lemon Soda" class="card-img"  width="500" height="350">
+          </div>
+          <div class="meta"><span>Refresher</span><span class="price">NPR 110</span></div>
+          <div class="title">Lemon Soda</div>
+          <div class="add-row"><div class="qty" id="qty-LemonSoda">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Mint Cooler" data-price="130">
+          <div class="card-img-container">
+            <img src="MINT COOLER.jpg" alt="Mint Cooler" class="card-img" width="500" height="350" >
+          </div>
+          <div class="meta"><span>Refresher</span><span class="price">NPR 130</span></div>
+          <div class="title">Mint Cooler</div>
+          <div class="add-row"><div class="qty" id="qty-MintCooler">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Orange Juice" data-price="150">
+          <div class="card-img-container">
+            <img src="orange_juice.jpg" alt="Orange Juice" class="card-img" width="500" height="350"  >
+          </div>
+          <div class="meta"><span>Refresher</span><span class="price">NPR 150</span></div>
+          <div class="title">Orange Juice</div>
+          <div class="add-row"><div class="qty" id="qty-OrangeJuice">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Strawberry Shake" data-price="170">
+          <div class="card-img-container">
+            <img src="STRAWBEERY_SHAKE.webp" alt="Strawberry Shake" class="card-img"  width="500" height="350" >
+          </div>
+          <div class="meta"><span>Refresher</span><span class="price">NPR 170</span></div>
+          <div class="title">Strawberry Shake</div>
+          <div class="add-row"><div class="qty" id="qty-StrawberryShake">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+
+        <!-- MAIN & FAST (4) -->
+        <article class="card" data-name="Veg Thukpa" data-price="220">
+          <div class="card-img-container">
+            <img src="VEG_THUKPA.jpg" alt="Veg Thukpa" class="card-img" width="500" height="350" >
+          </div>
+          <div class="meta"><span>Main</span><span class="price">NPR 220</span></div>
+          <div class="title">Veg Thukpa</div>
+          <div class="add-row"><div class="qty" id="qty-VegThukpa">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Chicken Thukpa" data-price="260">
+          <div class="card-img-container">
+            <img src="Chicken-Thukpa.jpg" alt="Chicken Thukpa" class="card-img"  width="500" height="350" >
+          </div>
+          <div class="meta"><span>Main</span><span class="price">NPR 260</span></div>
+          <div class="title">Chicken Thukpa</div>
+          <div class="add-row"><div class="qty" id="qty-ChickenThukpa">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Chicken 65" data-price="250">
+          <div class="card-img-container">
+            <img src="chicken65.jpeg" alt="Chicken 65" class="card-img" width="500" height="350"  >
+          </div>
+          <div class="meta"><span>Fast</span><span class="price">NPR 250</span></div>
+          <div class="title">Chicken 65</div>
+          <div class="add-row"><div class="qty" id="qty-Chicken65">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+        <article class="card" data-name="Chicken Lollipop" data-price="240">
+          <div class="card-img-container">
+            <img src="chicken lolipo.jpg" alt="Chicken Lollipop" class="card-img" width="500" height="350"  >
+          </div>
+          <div class="meta"><span>Fast</span><span class="price">NPR 240</span></div>
+          <div class="title">Chicken Lollipop</div>
+          <div class="add-row"><div class="qty" id="qty-ChickenLollipop">0</div><button class="btn add-btn">Add</button></div>
+        </article>
+      </div>
+      <div class="muted" style="margin-top:10px">Tip: Click anywhere on a card to add it quickly. Prices include tax.</div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="section" id="contact">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <input type="text" id="cname" placeholder="Your name" required>
+      <input type="email" id="cemail" placeholder="Your email (required)" required>
+      <textarea id="cmsg" rows="4" placeholder="Your message"></textarea>
+      <button type="submit" class="btn">Send Message</button>
+      <div id="cstatus" class="ok" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+
+  <!-- Cart / Order Panel -->
+  <aside class="cart" id="cart">
+    <div class="cart-header">
+      <h3>Your Order</h3>
+      <span id="cart-count" class="muted">0 items</span>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-total" style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08)">
+      <strong>Total</strong>
+      <strong id="cart-total">NPR 0</strong>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:10px">
+      <button id="clearCart" class="btn ghost" style="flex:1">Clear</button>
+      <button id="checkout" class="btn" style="flex:2">Checkout</button>
+    </div>
+  </aside>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal" aria-hidden="true">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <h3 id="loginTitle">Login to PET PUJA</h3>
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" type="text" placeholder="Enter username" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="Minimum 8 characters" />
+        <div class="hint">Must include uppercase, lowercase, number, and special character.</div>
+        <div class="error" id="loginError"></div>
+      </div>
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px">
+        <button id="closeLogin" class="btn ghost">Cancel</button>
+        <button id="submitLogin" class="btn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div class="modal" id="receiptModal" aria-hidden="true">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="receiptTitle">
+      <h3 id="receiptTitle">Payment Receipt — PET PUJA</h3>
+      <div id="receiptBody" class="muted" style="white-space:pre-wrap"></div>
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px">
+        <button id="closeReceipt" class="btn ghost">Close</button>
+        <button id="printReceipt" class="btn">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="section" style="border-top:1px solid rgba(255,255,255,.08)">
+    <div class="muted">© <span id="year"></span> PET PUJA • Crafted with care</div>
+  </footer>
+
+  <script>
+    // Cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set current year in footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+      
+      // Initialize cart
+      let cart = {};
+      
+      // Get DOM elements
+      const cartItemsEl = document.getElementById('cart-items');
+      const cartCountEl = document.getElementById('cart-count');
+      const cartTotalEl = document.getElementById('cart-total');
+      const clearCartBtn = document.getElementById('clearCart');
+      const checkoutBtn = document.getElementById('checkout');
+      const cards = document.querySelectorAll('.card');
+      const addButtons = document.querySelectorAll('.add-btn');
+      const loginBtn = document.getElementById('loginBtn');
+      const closeLoginBtn = document.getElementById('closeLogin');
+      const loginModal = document.getElementById('loginModal');
+      const closeReceiptBtn = document.getElementById('closeReceipt');
+      const receiptModal = document.getElementById('receiptModal');
+      const printReceiptBtn = document.getElementById('printReceipt');
+      const contactForm = document.getElementById('contactForm');
+      
+      // Add event listeners to cards
+      cards.forEach(card => {
+        card.addEventListener('click', function(e) {
+          // Don't add if clicking on the add button (it has its own handler)
+          if (e.target.classList.contains('add-btn')) return;
+          
+          const name = card.dataset.name;
+          const price = parseInt(card.dataset.price);
+          addToCart(name, price);
+        });
+      });
+      
+      // Add event listeners to add buttons
+      addButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.stopPropagation(); // Prevent card click event
+          const card = button.closest('.card');
+          const name = card.dataset.name;
+          const price = parseInt(card.dataset.price);
+          addToCart(name, price);
+        });
+      });
+      
+      // Add to cart function
+      function addToCart(name, price) {
+        if (cart[name]) {
+          cart[name].quantity++;
+        } else {
+          cart[name] = {
+            price: price,
+            quantity: 1
+          };
+        }
+        updateCart();
+      }
+      
+      // Update cart display
+      function updateCart() {
+        // Clear cart items
+        cartItemsEl.innerHTML = '';
+        
+        // Add items to cart
+        let total = 0;
+        let itemCount = 0;
+        
+        for (const [name, details] of Object.entries(cart)) {
+          const itemTotal = details.price * details.quantity;
+          total += itemTotal;
+          itemCount += details.quantity;
+          
+          const row = document.createElement('div');
+          row.className = 'cart-row';
+          row.innerHTML = `
+            <span class="cart-name">${name}</span>
+            <span class="cart-qty">
+              <button class="qty-btn" data-name="${name}">−</button>
+              <span>${details.quantity}</span>
+              <button class="qty-btn plus" data-name="${name}">+</button>
+            </span>
+            <span>NPR ${details.price}</span>
+            <span>NPR ${itemTotal}</span>
+          `;
+          cartItemsEl.appendChild(row);
+          
+          // Update quantity display on menu card
+          const qtyEl = document.getElementById(`qty-${name.replace(/\s+/g, '')}`);
+          if (qtyEl) {
+            qtyEl.textContent = details.quantity;
+          }
+        }
+        
+        // Update cart summary
+        cartCountEl.textContent = `${itemCount} ${itemCount === 1 ? 'item' : 'items'}`;
+        cartTotalEl.textContent = `NPR ${total}`;
+        
+        // Add event listeners to quantity buttons
+        document.querySelectorAll('.qty-btn').forEach(button => {
+          button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const name = button.dataset.name;
+            if (button.classList.contains('plus')) {
+              cart[name].quantity++;
+            } else {
+              cart[name].quantity--;
+              if (cart[name].quantity <= 0) {
+                delete cart[name];
+              }
+            }
+            updateCart();
+          });
+        });
+      }
+      
+      // Clear cart
+      clearCartBtn.addEventListener('click', function() {
+        cart = {};
+        updateCart();
+        // Reset all quantity displays
+        document.querySelectorAll('.qty').forEach(el => {
+          el.textContent = '0';
+        });
+      });
+      
+      // Checkout
+      checkoutBtn.addEventListener('click', function() {
+        if (Object.keys(cart).length === 0) {
+          alert('Your cart is empty!');
+          return;
+        }
+        
+        // Generate receipt
+        let receiptText = 'PET PUJA - Hotel & Café\n';
+        receiptText += '----------------------------\n';
+        receiptText += 'Order Summary:\n\n';
+        
+        let total = 0;
+        for (const [name, details] of Object.entries(cart)) {
+          const itemTotal = details.price * details.quantity;
+          total += itemTotal;
+          receiptText += `${name} x${details.quantity} - NPR ${itemTotal}\n`;
+        }
+        
+        receiptText += '\n----------------------------\n';
+        receiptText += `Total: NPR ${total}\n`;
+        receiptText += '----------------------------\n';
+        receiptText += 'Thank you for your order!\n';
+        
+        document.getElementById('receiptBody').textContent = receiptText;
+        receiptModal.classList.add('open');
+      });
+      
+      // Login modal
+      loginBtn.addEventListener('click', function() {
+        loginModal.classList.add('open');
+      });
+      
+      closeLoginBtn.addEventListener('click', function() {
+        loginModal.classList.remove('open');
+      });
+      
+      // Receipt modal
+      closeReceiptBtn.addEventListener('click', function() {
+        receiptModal.classList.remove('open');
+      });
+      
+      printReceiptBtn.addEventListener('click', function() {
+        window.print();
+      });
+      
+      // Contact form
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const statusEl = document.getElementById('cstatus');
+        statusEl.textContent = 'Message sent successfully!';
+        contactForm.reset();
+        setTimeout(() => {
+          statusEl.textContent = '';
+        }, 3000);
+      });
+      
+      // Close modals when clicking outside
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+          e.target.classList.remove('open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
